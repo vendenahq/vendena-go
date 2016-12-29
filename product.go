@@ -23,8 +23,8 @@ type Product struct {
 	UpdatedAt            time.Time `json:"updated_at"`
 	Images               []Image   `json:"images"`
 	Variants             []Variant `json:"variants"`
-	Products             []Product `json:"taxons"`
-	ProductIDs           []int64   `json:"taxon_ids"`
+	Taxons               []Taxon   `json:"taxons"`
+	TaxonIDs             []int64   `json:"taxon_ids"`
 	Session              *Session  `json:"-"`
 }
 
