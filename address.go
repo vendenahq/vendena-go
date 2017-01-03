@@ -8,8 +8,8 @@ type Address struct {
 	FirstName string    `json:"first_name"`
 	LastName  string    `json:"last_name"`
 	Email     string    `json:"email"`
-	Address1  string    `json:"address_1"`
-	Address2  string    `json:"address_2"`
+	Address1  string    `json:"address1"`
+	Address2  string    `json:"address2"`
 	City      string    `json:"city"`
 	Province  string    `json:"province"`
 	Country   string    `json:"country"`

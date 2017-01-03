@@ -24,12 +24,31 @@ const colorDefault = "\x1b[0m"
 
 // API represents the client configuration.
 type API struct {
-	URI       string
-	Token     string
-	Secret    string
-	ChannelID int64
-	LogURI    bool
-	client    *http.Client
+	URI               string
+	BasicAuthUsername string
+	BasicAuthPassword string
+	ClientID          string
+	ClientSecret      string
+	StoreID           int64
+	ChannelID         int64
+	LogURI            bool
+	client            *http.Client
+}
+
+// SetBasicAuthentication sets the Basic Authentication credentials and removes the API keys.
+func (api *API) SetBasicAuthentication(username string, password string) {
+	api.BasicAuthUsername = username
+	api.BasicAuthPassword = password
+	api.ClientID = ""
+	api.ClientSecret = ""
+}
+
+// SetAPIKeys sets the API keys and removes the Basic Authentication credentials.
+func (api *API) SetAPIKeys(clientID string, clientSecret string) {
+	api.ClientID = clientID
+	api.ClientSecret = clientSecret
+	api.BasicAuthUsername = ""
+	api.BasicAuthPassword = ""
 }
 
 // Session represents the data for the model objects.
@@ -75,7 +94,6 @@ func request(session interface{}, method string, id string, suffix string, body 
 	}
 
 	var uri = fmt.Sprintf("%s/%s", api.URI, endpoint)
-
 	if api.LogURI {
 		log.Println(uri + " ")
 	}
@@ -85,18 +103,38 @@ func request(session interface{}, method string, id string, suffix string, body 
 		return
 	}
 
-	req.SetBasicAuth(api.Token, api.Secret)
-	req.Header.Add("X-Channel-ID", strconv.FormatInt(api.ChannelID, 10))
+	// Set BasicAuth credentials (if defined)
+	if len(api.BasicAuthUsername) > 0 && len(api.BasicAuthPassword) > 0 {
+		req.SetBasicAuth(api.BasicAuthUsername, api.BasicAuthPassword)
+	}
+
+	// Set API keys (if defined)
+	if len(api.ClientID) > 0 && len(api.ClientSecret) > 0 {
+		req.SetBasicAuth(api.ClientID, api.ClientSecret)
+	}
+
+	// Determine the Store and Channel headers
+	if api.StoreID > 0 {
+		req.Header.Add("X-Store-ID", strconv.FormatInt(api.StoreID, 10))
+	}
+	if api.ChannelID > 0 {
+		req.Header.Add("X-Channel-ID", strconv.FormatInt(api.ChannelID, 10))
+	}
+
+	// Set JSON header
 	req.Header.Add("Content-Type", "application/json")
 
+	// Do the actual request
 	resp, err := api.client.Do(req)
 	// fmt.Printf("resp %v err %v", resp, err)
 	if err != nil {
 		return
 	}
 
+	// Return the response status
 	status = resp.StatusCode
 
+	// Copy the response stream so we can return the response body
 	result = &bytes.Buffer{}
 	if _, err = io.Copy(result, resp.Body); err != nil {
 		return

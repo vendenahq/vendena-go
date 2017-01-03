@@ -62,3 +62,9 @@ func (object *Store) Save() (err error) {
 	_, err = save(object, *object.Session, object.ID)
 	return
 }
+
+// Delete deletes an object.
+func (object *Store) Delete() (err error) {
+	_, err = delete(*object.Session, object.ID)
+	return
+}

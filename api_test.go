@@ -3,6 +3,7 @@ package vendena
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,9 +12,8 @@ import (
 var (
 	api = API{
 		URI:       "http://localhost:8080",
-		Token:     "",
-		Secret:    "",
-		ChannelID: int64(1),
+		StoreID:   int64(0),
+		ChannelID: int64(0),
 		LogURI:    false,
 	}
 	deliveryMethod = api.DeliveryMethods().New()
@@ -32,12 +32,24 @@ func init() {
 		api.URI = os.Getenv("VENDENA_API_HOST")
 	}
 
-	if os.Getenv("VENDENA_API_TOKEN") != "" {
-		api.Token = os.Getenv("VENDENA_API_TOKEN")
+	if os.Getenv("VENDENA_API_USERNAME") != "" && os.Getenv("VENDENA_API_PASSWORD") != "" {
+		api.SetBasicAuthentication(os.Getenv("VENDENA_API_USERNAME"), os.Getenv("VENDENA_API_PASSWORD"))
 	}
 
-	if os.Getenv("VENDENA_API_SECRET") != "" {
-		api.Secret = os.Getenv("VENDENA_API_SECRET")
+	if os.Getenv("VENDENA_API_CLIENT_ID") != "" && os.Getenv("VENDENA_API_CLIENT_SECRET") != "" {
+		api.SetAPIKeys(os.Getenv("VENDENA_API_CLIENT_ID"), os.Getenv("VENDENA_API_CLIENT_SECRET"))
+	}
+
+	if os.Getenv("VENDENA_API_STORE_ID") != "" {
+		if id, err := strconv.ParseInt(os.Getenv("VENDENA_API_STORE_ID"), 10, 64); err == nil {
+			api.StoreID = id
+		}
+	}
+
+	if os.Getenv("VENDENA_API_CHANNEL_ID") != "" {
+		if id, err := strconv.ParseInt(os.Getenv("VENDENA_API_CHANNEL_ID"), 10, 64); err == nil {
+			api.ChannelID = id
+		}
 	}
 }
 
