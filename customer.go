@@ -50,17 +50,17 @@ func (sess CustomerSession) Limit(limit int) CustomerSession {
 }
 
 // Find returns a single instance by ID.
-func (sess CustomerSession) Find(id int64) (object *Customer, err error) {
+func (sess CustomerSession) Find(id int64) (object *Customer, vendenaError *Error) {
 	object = &Customer{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess CustomerSession) All() (objects []Customer, err error) {
+func (sess CustomerSession) All() (objects []Customer, vendenaError *Error) {
 	objects = []Customer{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -68,8 +68,8 @@ func (sess CustomerSession) All() (objects []Customer, err error) {
 }
 
 // Count returns the number of instances.
-func (sess CustomerSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess CustomerSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 

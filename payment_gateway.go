@@ -27,17 +27,17 @@ func (api *API) PaymentGateways() PaymentGatewaySession {
 }
 
 // Find returns a single instance by ID.
-func (sess PaymentGatewaySession) Find(id int64) (object *PaymentGateway, err error) {
+func (sess PaymentGatewaySession) Find(id int64) (object *PaymentGateway, vendenaError *Error) {
 	object = &PaymentGateway{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess PaymentGatewaySession) All() (objects []PaymentGateway, err error) {
+func (sess PaymentGatewaySession) All() (objects []PaymentGateway, vendenaError *Error) {
 	objects = []PaymentGateway{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -45,7 +45,7 @@ func (sess PaymentGatewaySession) All() (objects []PaymentGateway, err error) {
 }
 
 // Count returns the number of instances.
-func (sess PaymentGatewaySession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess PaymentGatewaySession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }

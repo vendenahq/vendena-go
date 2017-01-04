@@ -29,17 +29,17 @@ func (api *API) Taxons() TaxonSession {
 }
 
 // Find returns a single instance by ID.
-func (sess TaxonSession) Find(id int64) (object *Taxon, err error) {
+func (sess TaxonSession) Find(id int64) (object *Taxon, vendenaError *Error) {
 	object = &Taxon{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess TaxonSession) All() (objects []Taxon, err error) {
+func (sess TaxonSession) All() (objects []Taxon, vendenaError *Error) {
 	objects = []Taxon{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -47,8 +47,8 @@ func (sess TaxonSession) All() (objects []Taxon, err error) {
 }
 
 // Count returns the number of instances.
-func (sess TaxonSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess TaxonSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -61,13 +61,13 @@ func (sess TaxonSession) New() Taxon {
 }
 
 // Save creates or updates an object.
-func (object *Taxon) Save() (err error) {
-	_, err = save(object, *object.Session, object.ID)
+func (object *Taxon) Save() (vendenaError *Error) {
+	_, vendenaError = save(object, *object.Session, object.ID)
 	return
 }
 
 // Delete deletes an object.
-func (object *Taxon) Delete() (err error) {
-	_, err = delete(*object.Session, object.ID)
+func (object *Taxon) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
 	return
 }

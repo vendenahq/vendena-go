@@ -27,17 +27,17 @@ func (sess PriceModifierSession) New() PriceModifier {
 }
 
 // Find returns a single instance by ID.
-func (sess PriceModifierSession) Find(id int64) (object *PriceModifier, err error) {
+func (sess PriceModifierSession) Find(id int64) (object *PriceModifier, vendenaError *Error) {
 	object = &PriceModifier{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess PriceModifierSession) All() (objects []PriceModifier, err error) {
+func (sess PriceModifierSession) All() (objects []PriceModifier, vendenaError *Error) {
 	objects = []PriceModifier{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}

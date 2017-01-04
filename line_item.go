@@ -30,7 +30,7 @@ type LineItemSession struct {
 func (api *API) LineItems() LineItemSession {
 	var s LineItemSession
 	s.API = api
-	s.URI = "price_modifiers"
+	s.URI = "line_items"
 	s.Options = map[string]string{}
 	return s
 }

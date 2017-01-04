@@ -50,17 +50,17 @@ func (sess DeliveryMethodSession) Limit(limit int) DeliveryMethodSession {
 }
 
 // Find returns a single instance by ID.
-func (sess DeliveryMethodSession) Find(id int64) (object *DeliveryMethod, err error) {
+func (sess DeliveryMethodSession) Find(id int64) (object *DeliveryMethod, vendenaError *Error) {
 	object = &DeliveryMethod{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess DeliveryMethodSession) All() (objects []DeliveryMethod, err error) {
+func (sess DeliveryMethodSession) All() (objects []DeliveryMethod, vendenaError *Error) {
 	objects = []DeliveryMethod{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -68,8 +68,8 @@ func (sess DeliveryMethodSession) All() (objects []DeliveryMethod, err error) {
 }
 
 // Count returns the number of instances.
-func (sess DeliveryMethodSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess DeliveryMethodSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -82,13 +82,13 @@ func (sess DeliveryMethodSession) New() DeliveryMethod {
 }
 
 // Save creates or updates an object.
-func (object *DeliveryMethod) Save() (err error) {
-	_, err = save(&object, *object.Session, object.ID)
+func (object *DeliveryMethod) Save() (vendenaError *Error) {
+	_, vendenaError = save(&object, *object.Session, object.ID)
 	return
 }
 
 // Delete deletes an object.
-func (object *DeliveryMethod) Delete() (err error) {
-	_, err = delete(*object.Session, object.ID)
+func (object *DeliveryMethod) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
 	return
 }

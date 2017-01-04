@@ -29,17 +29,17 @@ func (api *API) Tokens() TokenSession {
 }
 
 // Find returns a single instance by ID.
-func (sess TokenSession) Find(id int64) (object *Token, err error) {
+func (sess TokenSession) Find(id int64) (object *Token, vendenaError *Error) {
 	object = &Token{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess TokenSession) All() (objects []Token, err error) {
+func (sess TokenSession) All() (objects []Token, vendenaError *Error) {
 	objects = []Token{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -47,8 +47,8 @@ func (sess TokenSession) All() (objects []Token, err error) {
 }
 
 // Count returns the number of instances.
-func (sess TokenSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess TokenSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -60,13 +60,13 @@ func (sess TokenSession) New() Token {
 }
 
 // Save creates or updates an object.
-func (object *Token) Save() (err error) {
-	_, err = save(object, *object.Session, object.ID)
+func (object *Token) Save() (vendenaError *Error) {
+	_, vendenaError = save(object, *object.Session, object.ID)
 	return
 }
 
 // Delete deletes an object.
-func (object *Token) Delete() (err error) {
-	_, err = delete(*object.Session, object.ID)
+func (object *Token) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
 	return
 }

@@ -3,7 +3,6 @@ package vendena
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -54,17 +53,17 @@ func (api *API) Orders() OrderSession {
 }
 
 // FindByToken returns a single instance by token.
-func (sess OrderSession) FindByToken(token string) (object *Order, err error) {
+func (sess OrderSession) FindByToken(token string) (object *Order, vendenaError *Error) {
 	object = &Order{}
-	_, err = findOneByToken(object, sess.Session, token)
+	_, vendenaError = findOneByToken(object, sess.Session, token)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess OrderSession) All() (objects []Order, err error) {
+func (sess OrderSession) All() (objects []Order, vendenaError *Error) {
 	objects = []Order{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -72,8 +71,8 @@ func (sess OrderSession) All() (objects []Order, err error) {
 }
 
 // Count returns the number of instances.
-func (sess OrderSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess OrderSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -85,27 +84,25 @@ func (sess OrderSession) New() Order {
 }
 
 // Save creates or updates an object.
-func (object *Order) Save() (err error) {
-	_, err = saveByToken(object, *object.Session, object.Token)
+func (object *Order) Save() (vendenaError *Error) {
+	_, vendenaError = saveByToken(object, *object.Session, object.Token)
 	return
 }
 
 // DeliveryMethods gets the delivery methods available to the order.
-func (object *Order) DeliveryMethods() (deliveryMethods []DeliveryMethod, err error) {
-	result, status, err := request(*object.Session, http.MethodGet, object.Token, "delivery_methods", nil)
-
-	if err != nil {
+func (object *Order) DeliveryMethods() (deliveryMethods []DeliveryMethod, vendenaError *Error) {
+	result, status, vendenaError := request(*object.Session, http.MethodGet, object.Token, "delivery_methods", nil)
+	if vendenaError != nil {
 		return
 	}
 
 	if status != http.StatusOK {
-		err = fmt.Errorf("Status returned: %d", status)
+		vendenaError = parseVendenaError(result, status)
 		return
 	}
 
-	err = json.NewDecoder(result).Decode(&deliveryMethods)
-
-	if err != nil {
+	if err := json.NewDecoder(result).Decode(&deliveryMethods); err != nil {
+		vendenaError = createError("json_decoder_error", err)
 		return
 	}
 
@@ -113,21 +110,19 @@ func (object *Order) DeliveryMethods() (deliveryMethods []DeliveryMethod, err er
 }
 
 // PaymentMethods gets the payment methods available to the order.
-func (object *Order) PaymentMethods() (paymentMethods []PaymentMethod, err error) {
-	result, status, err := request(*object.Session, http.MethodGet, object.Token, "payment_methods", nil)
-
-	if err != nil {
+func (object *Order) PaymentMethods() (paymentMethods []PaymentMethod, vendenaError *Error) {
+	result, status, vendenaError := request(*object.Session, http.MethodGet, object.Token, "payment_methods", nil)
+	if vendenaError != nil {
 		return
 	}
 
 	if status != http.StatusOK {
-		err = fmt.Errorf("Status returned: %d", status)
+		vendenaError = parseVendenaError(result, status)
 		return
 	}
 
-	err = json.NewDecoder(result).Decode(&paymentMethods)
-
-	if err != nil {
+	if err := json.NewDecoder(result).Decode(&paymentMethods); err != nil {
+		vendenaError = createError("json_decoder_error", err)
 		return
 	}
 
@@ -135,7 +130,7 @@ func (object *Order) PaymentMethods() (paymentMethods []PaymentMethod, err error
 }
 
 // FormData gets the order's payment form data for external checkout integrations.
-func (object *Order) FormData() (formData OrderFormData, err error) {
+func (object *Order) FormData() (formData OrderFormData, vendenaError *Error) {
 	result, status, err := request(*object.Session, http.MethodGet, object.Token, "payment_form", nil)
 
 	if err != nil {
@@ -143,11 +138,14 @@ func (object *Order) FormData() (formData OrderFormData, err error) {
 	}
 
 	if status != http.StatusOK {
-		err = fmt.Errorf("Status returned: %d", status)
+		vendenaError = parseVendenaError(result, status)
 		return
 	}
 
-	err = json.NewDecoder(result).Decode(&formData)
+	if err := json.NewDecoder(result).Decode(&formData); err != nil {
+		vendenaError = createError("json_decoder_error", err)
+		return
+	}
 
 	if err != nil {
 		return
@@ -157,31 +155,29 @@ func (object *Order) FormData() (formData OrderFormData, err error) {
 }
 
 // ValidateNotification validates the notification callback from an external checkout integration.
-func (object *Order) ValidateNotification(data string) (validationResult OrderNotificationValidationResult, err error) {
+func (object *Order) ValidateNotification(data string) (validationResult OrderNotificationValidationResult, vendenaError *Error) {
 	var validation = OrderNotificationValidation{
 		Querystring: data,
 	}
 
 	var body = &bytes.Buffer{}
-	err = json.NewEncoder(body).Encode(&validation)
-	if err != nil {
+	if err := json.NewEncoder(body).Encode(&validation); err != nil {
+		vendenaError = createError("json_encoder_error", err)
 		return
 	}
 
-	result, status, err := request(*object.Session, http.MethodPost, object.Token, "validate_notification", body)
-
-	if err != nil {
+	result, status, vendenaError := request(*object.Session, http.MethodPost, object.Token, "validate_notification", body)
+	if vendenaError != nil {
 		return
 	}
 
 	if status != http.StatusOK {
-		err = fmt.Errorf("Status returned: %d", status)
+		vendenaError = parseVendenaError(result, status)
 		return
 	}
 
-	err = json.NewDecoder(result).Decode(&validationResult)
-
-	if err != nil {
+	if err := json.NewDecoder(result).Decode(&validationResult); err != nil {
+		vendenaError = createError("json_decoder_error", err)
 		return
 	}
 

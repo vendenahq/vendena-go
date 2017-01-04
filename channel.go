@@ -47,17 +47,17 @@ func (sess ChannelSession) Limit(limit int) ChannelSession {
 }
 
 // Find returns a single instance by ID.
-func (sess ChannelSession) Find(id int64) (object *Channel, err error) {
+func (sess ChannelSession) Find(id int64) (object *Channel, vendenaError *Error) {
 	object = &Channel{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess ChannelSession) All() (objects []Channel, err error) {
+func (sess ChannelSession) All() (objects []Channel, vendenaError *Error) {
 	objects = []Channel{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -65,8 +65,8 @@ func (sess ChannelSession) All() (objects []Channel, err error) {
 }
 
 // Count returns the number of instances.
-func (sess ChannelSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess ChannelSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -79,13 +79,13 @@ func (sess ChannelSession) New() Channel {
 }
 
 // Save creates or updates an object.
-func (object *Channel) Save() (err error) {
-	_, err = save(&object, *object.Session, object.ID)
+func (object *Channel) Save() (vendenaError *Error) {
+	_, vendenaError = save(&object, *object.Session, object.ID)
 	return
 }
 
 // Delete deletes an object.
-func (object *Channel) Delete() (err error) {
-	_, err = delete(*object.Session, object.ID)
+func (object *Channel) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
 	return
 }

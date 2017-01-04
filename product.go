@@ -66,17 +66,17 @@ func (sess ProductSession) Taxons(values ...int64) ProductSession {
 }
 
 // Find returns a single instance by ID.
-func (sess ProductSession) Find(id int64) (object *Product, err error) {
+func (sess ProductSession) Find(id int64) (object *Product, vendenaError *Error) {
 	object = &Product{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess ProductSession) All() (objects []Product, err error) {
+func (sess ProductSession) All() (objects []Product, vendenaError *Error) {
 	objects = []Product{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -84,8 +84,8 @@ func (sess ProductSession) All() (objects []Product, err error) {
 }
 
 // Count returns the number of instances.
-func (sess ProductSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess ProductSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -98,8 +98,8 @@ func (sess ProductSession) New() Product {
 }
 
 // Save creates or updates an object.
-func (object *Product) Save() (err error) {
-	_, err = save(object, *object.Session, object.ID)
+func (object *Product) Save() (vendenaError *Error) {
+	_, vendenaError = save(object, *object.Session, object.ID)
 	return
 }
 
@@ -114,7 +114,7 @@ func (object *Product) AddVariant(variant Variant) {
 }
 
 // Delete deletes an object.
-func (object *Product) Delete() (err error) {
-	_, err = delete(*object.Session, object.ID)
+func (object *Product) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
 	return
 }

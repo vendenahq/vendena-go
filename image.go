@@ -28,17 +28,17 @@ func (api *API) Images() ImageSession {
 }
 
 // Find returns a single instance by ID.
-func (sess ImageSession) Find(id int64) (object *Image, err error) {
+func (sess ImageSession) Find(id int64) (object *Image, vendenaError *Error) {
 	object = &Image{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess ImageSession) All() (objects []Image, err error) {
+func (sess ImageSession) All() (objects []Image, vendenaError *Error) {
 	objects = []Image{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -46,8 +46,8 @@ func (sess ImageSession) All() (objects []Image, err error) {
 }
 
 // Count returns the number of instances.
-func (sess ImageSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess ImageSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -60,13 +60,13 @@ func (sess ImageSession) New() Image {
 }
 
 // Save creates or updates an object.
-func (object *Image) Save() (err error) {
-	_, err = save(object, *object.Session, object.ID)
+func (object *Image) Save() (vendenaError *Error) {
+	_, vendenaError = save(object, *object.Session, object.ID)
 	return
 }
 
 // Delete deletes an object.
-func (object *Image) Delete() (err error) {
-	_, err = delete(*object.Session, object.ID)
+func (object *Image) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
 	return
 }

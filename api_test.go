@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"testing"
 
+	vendena "kvika.io/vendena-go"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -393,7 +395,7 @@ func TestAddItemsToCart(t *testing.T) {
 	if allowCreate {
 		Describe("Add Items To Cart")
 
-		var err error
+		var err *vendena.Error
 
 		lineItem.ProductID = product.ID
 		lineItem.ProductOptionValueIDs = []int64{product.Variants[0].ProductOptionValueIDs[0], product.Variants[0].ProductOptionValueIDs[1]}

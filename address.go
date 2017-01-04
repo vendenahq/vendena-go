@@ -36,22 +36,22 @@ func (api *API) Addresses() AddressSession {
 }
 
 // Find returns a single instance by ID.
-func (sess AddressSession) Find(id int64) (object *Address, err error) {
+func (sess AddressSession) Find(id int64) (object *Address, vendenaError *Error) {
 	object = &Address{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	return
 }
 
 // All returns all instances.
-func (sess AddressSession) All() (objects []Address, err error) {
+func (sess AddressSession) All() (objects []Address, vendenaError *Error) {
 	objects = []Address{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	return
 }
 
 // Count returns the number of instances.
-func (sess AddressSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess AddressSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -61,7 +61,7 @@ func (sess AddressSession) New() Address {
 }
 
 // Save creates or updates an object.
-func (object *Address) Save() (err error) {
-	_, err = save(object, *object.Session, object.ID)
+func (object *Address) Save() (vendenaError *Error) {
+	_, vendenaError = save(object, *object.Session, object.ID)
 	return
 }

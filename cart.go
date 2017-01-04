@@ -3,7 +3,6 @@ package vendena
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -37,17 +36,17 @@ func (api *API) Carts() CartSession {
 }
 
 // FindByToken returns a single instance by token.
-func (sess CartSession) FindByToken(token string) (object *Cart, err error) {
+func (sess CartSession) FindByToken(token string) (object *Cart, vendenaError *Error) {
 	object = &Cart{}
-	_, err = findOneByToken(object, sess.Session, token)
+	_, vendenaError = findOneByToken(object, sess.Session, token)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess CartSession) All() (objects []Cart, err error) {
+func (sess CartSession) All() (objects []Cart, vendenaError *Error) {
 	objects = []Cart{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -55,8 +54,8 @@ func (sess CartSession) All() (objects []Cart, err error) {
 }
 
 // Count returns the number of instances.
-func (sess CartSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess CartSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -68,45 +67,46 @@ func (sess CartSession) New() Cart {
 }
 
 // Save creates or updates an object.
-func (object *Cart) Save() (err error) {
-	_, err = saveByToken(object, *object.Session, object.Token)
+func (object *Cart) Save() (vendenaError *Error) {
+	_, vendenaError = saveByToken(object, *object.Session, object.Token)
 	return
 }
 
 // SaveLineItem adds a new line item to the cart.
-func (object *Cart) SaveLineItem(lineItem *LineItem) (err error) {
+func (object *Cart) SaveLineItem(lineItem *LineItem) (vendenaError *Error) {
 	var body = &bytes.Buffer{}
-	err = json.NewEncoder(body).Encode(lineItem)
-	if err != nil {
+	if err := json.NewEncoder(body).Encode(lineItem); err != nil {
+		vendenaError = createError("json_encoder_error", err)
 		return
 	}
 
-	result, status, err := request(*object.Session, http.MethodPost, object.Token, "items", body)
-
-	if err != nil {
+	result, status, vendenaError := request(*object.Session, http.MethodPost, object.Token, "items", body)
+	if vendenaError != nil {
 		return
 	}
 
 	if status != http.StatusCreated {
-		err = fmt.Errorf("Status returned: %d", status)
+		vendenaError = parseVendenaError(result, status)
 		return
 	}
 
-	err = json.NewDecoder(result).Decode(lineItem)
+	if err := json.NewDecoder(result).Decode(lineItem); err != nil {
+		vendenaError = createError("json_decoder_error", err)
+		return
+	}
 
 	return
 }
 
 // RemoveLineItem removes a line item from the cart.
-func (object *Cart) RemoveLineItem(id int64) (err error) {
-	_, status, err := request(*object.Session, http.MethodDelete, object.Token, "items/"+strconv.FormatInt(id, 10), nil)
-
-	if err != nil {
+func (object *Cart) RemoveLineItem(id int64) (vendenaError *Error) {
+	result, status, vendenaError := request(*object.Session, http.MethodDelete, object.Token, "items/"+strconv.FormatInt(id, 10), nil)
+	if vendenaError != nil {
 		return
 	}
 
 	if status != http.StatusOK {
-		err = fmt.Errorf("Status returned: %d", status)
+		vendenaError = parseVendenaError(result, status)
 		return
 	}
 
@@ -114,22 +114,23 @@ func (object *Cart) RemoveLineItem(id int64) (err error) {
 }
 
 // Checkout creates a new order from the cart.
-func (object *Cart) Checkout() (order Order, err error) {
+func (object *Cart) Checkout() (order Order, vendenaError *Error) {
 	var api = object.Session.API
 	order = api.Orders().New()
 
-	result, status, err := request(*object.Session, http.MethodPost, object.Token, "checkout", nil)
-
-	if err != nil {
+	result, status, vendenaError := request(*object.Session, http.MethodPost, object.Token, "checkout", nil)
+	if vendenaError != nil {
 		return
 	}
 
 	if status != http.StatusCreated {
-		err = fmt.Errorf("Status returned: %d", status)
+		vendenaError = parseVendenaError(result, status)
 		return
 	}
-
-	err = json.NewDecoder(result).Decode(&order)
+	if err := json.NewDecoder(result).Decode(&order); err != nil {
+		vendenaError = createError("json_decoder_error", err)
+		return
+	}
 
 	return
 }

@@ -38,22 +38,22 @@ func (api *API) PaymentMethods() PaymentMethodSession {
 }
 
 // Find returns a single instance by ID.
-func (sess PaymentMethodSession) Find(id int64) (object *PaymentMethod, err error) {
+func (sess PaymentMethodSession) Find(id int64) (object *PaymentMethod, vendenaError *Error) {
 	object = &PaymentMethod{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	return
 }
 
 // All returns all instances.
-func (sess PaymentMethodSession) All() (objects []PaymentMethod, err error) {
+func (sess PaymentMethodSession) All() (objects []PaymentMethod, vendenaError *Error) {
 	objects = []PaymentMethod{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	return
 }
 
 // Count returns the number of instances.
-func (sess PaymentMethodSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess PaymentMethodSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -66,13 +66,13 @@ func (sess PaymentMethodSession) New() PaymentMethod {
 }
 
 // Save creates or updates an object.
-func (object *PaymentMethod) Save() (err error) {
-	_, err = save(object, *object.Session, object.ID)
+func (object *PaymentMethod) Save() (vendenaError *Error) {
+	_, vendenaError = save(object, *object.Session, object.ID)
 	return
 }
 
 // Delete deletes an object.
-func (object *PaymentMethod) Delete() (err error) {
-	_, err = delete(*object.Session, object.ID)
+func (object *PaymentMethod) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
 	return
 }

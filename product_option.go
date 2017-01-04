@@ -43,17 +43,17 @@ func (sess ProductOptionSession) Limit(limit int) ProductOptionSession {
 }
 
 // Find returns a single instance by ID.
-func (sess ProductOptionSession) Find(id int64) (object *ProductOption, err error) {
+func (sess ProductOptionSession) Find(id int64) (object *ProductOption, vendenaError *Error) {
 	object = &ProductOption{}
-	_, err = findOne(object, sess.Session, id)
+	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
 	return
 }
 
 // All returns all instances.
-func (sess ProductOptionSession) All() (objects []ProductOption, err error) {
+func (sess ProductOptionSession) All() (objects []ProductOption, vendenaError *Error) {
 	objects = []ProductOption{}
-	_, err = findAll(&objects, sess.Session)
+	_, vendenaError = findAll(&objects, sess.Session)
 	for i := range objects {
 		objects[i].Session = &sess.Session
 	}
@@ -61,8 +61,8 @@ func (sess ProductOptionSession) All() (objects []ProductOption, err error) {
 }
 
 // Count returns the number of instances.
-func (sess ProductOptionSession) Count() (total int, err error) {
-	total, _, err = count(sess.Session)
+func (sess ProductOptionSession) Count() (total int, vendenaError *Error) {
+	total, _, vendenaError = count(sess.Session)
 	return
 }
 
@@ -74,8 +74,8 @@ func (sess ProductOptionSession) New() ProductOption {
 }
 
 // Save creates or updates an object.
-func (object *ProductOption) Save() (err error) {
-	_, err = save(object, *object.Session, object.ID)
+func (object *ProductOption) Save() (vendenaError *Error) {
+	_, vendenaError = save(object, *object.Session, object.ID)
 	return
 }
 
@@ -86,7 +86,7 @@ func (object *ProductOption) AddValue(v ProductOptionValue) {
 }
 
 // Delete deletes an object.
-func (object *ProductOption) Delete() (err error) {
-	_, err = delete(*object.Session, object.ID)
+func (object *ProductOption) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
 	return
 }
