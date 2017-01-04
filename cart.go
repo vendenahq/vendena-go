@@ -38,6 +38,7 @@ func (api *API) Carts() CartSession {
 
 // FindByToken returns a single instance by token.
 func (sess CartSession) FindByToken(token string) (object *Cart, err error) {
+	object = &Cart{}
 	_, err = findOneByToken(object, sess.Session, token)
 	object.Session = &sess.Session
 	return

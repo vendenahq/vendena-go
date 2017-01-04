@@ -7,7 +7,7 @@ type Variant struct {
 	ID                    int64     `json:"id"`
 	ProductID             int64     `json:"product_id"`
 	PriceModifierID       int64     `json:"price_modifier_id"`
-	ProductOptionValueIDs []int64   `json:"product_option_value_ids"`
+	ProductOptionValueIDs []int64   `json:"option_value_ids"`
 	Title                 string    `json:"title"`
 	Price                 float64   `json:"price"`
 	TotalPrice            float64   `json:"total_price"`
