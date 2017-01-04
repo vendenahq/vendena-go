@@ -1,6 +1,9 @@
 package vendena
 
-import "time"
+import (
+	"strconv"
+	"time"
+)
 
 // The Taxon model.
 type Taxon struct {
@@ -26,6 +29,18 @@ func (api *API) Taxons() TaxonSession {
 	s.URI = "taxons"
 	s.Options = map[string]string{}
 	return s
+}
+
+// ParentID sets the parent_id option.
+func (sess TaxonSession) ParentID(id int64) TaxonSession {
+	sess.Options["parent_id"] = strconv.FormatInt(id, 10)
+	return sess
+}
+
+// SiblingID sets the sibling_id option.
+func (sess TaxonSession) SiblingID(id int64) TaxonSession {
+	sess.Options["sibling_id"] = strconv.FormatInt(id, 10)
+	return sess
 }
 
 // Find returns a single instance by ID.
