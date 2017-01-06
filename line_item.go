@@ -8,7 +8,7 @@ type LineItem struct {
 	ProductID             int64     `json:"product_id"`
 	VariantID             int64     `json:"variant_id"`
 	ProductOptionValueIDs []int64   `json:"option_value_ids"`
-	Quantity              int64     `json:"quantity"`
+	Quantity              int       `json:"quantity"`
 	Price                 float64   `json:"price"`
 	TotalPrice            float64   `json:"total_price"`
 	Weight                float64   `json:"weight"`
