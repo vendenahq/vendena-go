@@ -136,8 +136,8 @@ func (object *Cart) Checkout() (order Order, vendenaError *Error) {
 }
 
 // GetTotalQuantity sums the quantity of all the line items.
-func (object Cart) GetTotalQuantity() int64 {
-	var total = int64(0)
+func (object Cart) GetTotalQuantity() int {
+	var total = 0
 	for _, item := range object.LineItems {
 		total += item.Quantity
 	}
