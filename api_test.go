@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	vendena "kvika.io/vendena-go"
+	vendena "github.com/vendenahq/vendena-go"
 
 	"github.com/stretchr/testify/assert"
 )
