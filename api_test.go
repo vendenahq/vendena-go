@@ -6,8 +6,6 @@ import (
 	"strconv"
 	"testing"
 
-	vendena "github.com/vendenahq/vendena-go"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -395,7 +393,7 @@ func TestAddItemsToCart(t *testing.T) {
 	if allowCreate {
 		Describe("Add Items To Cart")
 
-		var err *vendena.Error
+		var err *Error
 
 		lineItem.ProductID = product.ID
 		lineItem.ProductOptionValueIDs = []int64{product.Variants[0].ProductOptionValueIDs[0], product.Variants[0].ProductOptionValueIDs[1]}
@@ -446,7 +444,7 @@ func TestCheckout(t *testing.T) {
 	if allowCreate {
 		Describe("Checkout")
 
-		var err error
+		var err *Error
 
 		order, err = cart.Checkout()
 		assert.Nil(t, err, "should be nil")
