@@ -18,6 +18,7 @@ type Address struct {
 	Company   string    `json:"company"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	Geometry  *Geometry `json:"geometry"`
 	Session   *Session  `json:"-"`
 }
 

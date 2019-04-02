@@ -8,6 +8,7 @@ type Variant struct {
 	ProductID             int64     `json:"product_id"`
 	PriceModifierID       int64     `json:"price_modifier_id"`
 	ProductOptionValueIDs []int64   `json:"option_value_ids"`
+	LocationID            int64     `json:"location_id"`
 	Title                 string    `json:"title"`
 	Price                 float64   `json:"price"`
 	TotalPrice            float64   `json:"total_price"`
@@ -19,6 +20,7 @@ type Variant struct {
 	Enabled               bool      `json:"enabled"`
 	CreatedAt             time.Time `json:"created_at"`
 	UpdatedAt             time.Time `json:"updated_at"`
+	Location              *Location `json:"location"`
 	Session               *Session  `json:"-"`
 }
 

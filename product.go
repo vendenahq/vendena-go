@@ -9,6 +9,7 @@ import (
 // The Product model.
 type Product struct {
 	ID                   int64     `json:"id"`
+	LocationID           int64     `json:"location_id"`
 	Title                string    `json:"title"`
 	Body                 string    `json:"body"`
 	Excerpt              string    `json:"excerpt"`
@@ -21,6 +22,7 @@ type Product struct {
 	Enabled              bool      `json:"enabled"`
 	CreatedAt            time.Time `json:"created_at"`
 	UpdatedAt            time.Time `json:"updated_at"`
+	Location             *Location `json:"location"`
 	Images               []Image   `json:"images"`
 	Variants             []Variant `json:"variants"`
 	Taxons               []Taxon   `json:"taxons"`
