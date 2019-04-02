@@ -8,26 +8,28 @@ import (
 
 // The Product model.
 type Product struct {
-	ID                   int64     `json:"id"`
-	LocationID           int64     `json:"location_id"`
-	Title                string    `json:"title"`
-	Body                 string    `json:"body"`
-	Excerpt              string    `json:"excerpt"`
-	Slug                 string    `json:"slug"`
-	Price                float64   `json:"price"`
-	Weight               float64   `json:"weight"`
-	SKU                  string    `json:"sku"`
-	StockLevel           int       `json:"stock_level"`
-	StockLevelLowWarning int       `json:"stock_level_low_warning"`
-	Enabled              bool      `json:"enabled"`
-	CreatedAt            time.Time `json:"created_at"`
-	UpdatedAt            time.Time `json:"updated_at"`
-	Location             *Location `json:"location"`
-	Images               []Image   `json:"images"`
-	Variants             []Variant `json:"variants"`
-	Taxons               []Taxon   `json:"taxons"`
-	TaxonIDs             []int64   `json:"taxon_ids"`
-	Session              *Session  `json:"-"`
+	ID                   int64      `json:"id"`
+	LocationID           int64      `json:"location_id"`
+	Title                string     `json:"title,omitempty"`
+	Body                 string     `json:"body"`
+	Excerpt              string     `json:"excerpt"`
+	Slug                 string     `json:"slug"`
+	Price                float64    `json:"price"`
+	Weight               float64    `json:"weight"`
+	SKU                  string     `json:"sku"`
+	StockLevel           int        `json:"stock_level"`
+	StockLevelLowWarning int        `json:"stock_level_low_warning"`
+	StartAt              *time.Time `json:"start_at,omitempty"`
+	EndAt                *time.Time `json:"end_at,omitempty"`
+	Enabled              bool       `json:"enabled"`
+	CreatedAt            time.Time  `json:"created_at"`
+	UpdatedAt            time.Time  `json:"updated_at"`
+	Location             *Location  `json:"location"`
+	Images               []Image    `json:"images"`
+	Variants             []Variant  `json:"variants"`
+	Taxons               []Taxon    `json:"taxons"`
+	TaxonIDs             []int64    `json:"taxon_ids"`
+	Session              *Session   `json:"-"`
 }
 
 // ProductSession represents the constructor.
