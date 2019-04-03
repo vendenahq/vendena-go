@@ -19,8 +19,8 @@ type Product struct {
 	SKU                  string     `json:"sku"`
 	StockLevel           int        `json:"stock_level"`
 	StockLevelLowWarning int        `json:"stock_level_low_warning"`
-	StartAt              *time.Time `json:"start_at,omitempty"`
-	EndAt                *time.Time `json:"end_at,omitempty"`
+	SaleStartAt          *time.Time `json:"sale_start_at,omitempty"`
+	SaleEndAt            *time.Time `json:"sale_end_at,omitempty"`
 	Enabled              bool       `json:"enabled"`
 	CreatedAt            time.Time  `json:"created_at"`
 	UpdatedAt            time.Time  `json:"updated_at"`
