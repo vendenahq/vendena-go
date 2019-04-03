@@ -14,7 +14,6 @@ type Customer struct {
 	Email             string    `json:"email"`
 	Username          string    `json:"username"`
 	Password          string    `json:"password"`
-	PasswordConfirm   string    `json:"password_confirm"`
 	UseBillingAddress bool      `json:"use_billing_address"`
 	CreatedAt         time.Time `json:"created_at"`
 	UpdatedAt         time.Time `json:"updated_at"`
@@ -78,4 +77,16 @@ func (sess CustomerSession) New() Customer {
 	return Customer{
 		Session: &sess.Session,
 	}
+}
+
+// Save creates or updates an object.
+func (object *Customer) Save() (vendenaError *Error) {
+	_, vendenaError = save(&object, *object.Session, object.ID)
+	return
+}
+
+// Delete deletes an object.
+func (object *Customer) Delete() (vendenaError *Error) {
+	_, vendenaError = delete(*object.Session, object.ID)
+	return
 }
