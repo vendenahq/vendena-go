@@ -11,6 +11,8 @@ import (
 type Order struct {
 	ID                  int64                   `json:"id"`
 	ChannelID           int64                   `json:"channel_id"`
+	CartID              int64                   `json:"cart_id"`
+	CustomerID          int64                   `json:"customer_id"`
 	Token               string                  `json:"token"`
 	StatusID            int64                   `json:"status_id"`
 	Status              *OrderStatus            `json:"status"`
