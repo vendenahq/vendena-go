@@ -5,6 +5,7 @@ import "time"
 // The Store model.
 type Store struct {
 	ID        int64     `json:"id"`
+	ProjectID int64     `json:"project_id"`
 	AddressID int64     `json:"-"`
 	Title     string    `json:"title"`
 	VATNumber string    `json:"vat_number"`
