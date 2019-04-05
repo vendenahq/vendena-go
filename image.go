@@ -5,6 +5,7 @@ import "time"
 // The Image model.
 type Image struct {
 	ID        int64     `json:"id"`
+	UUID      string    `json:"uuid"`
 	Title     string    `json:"title"`
 	URL       string    `json:"url"`
 	Enabled   bool      `json:"enabled"`
@@ -28,7 +29,7 @@ func (api *API) Images() ImageSession {
 }
 
 // Find returns a single instance by ID.
-func (sess ImageSession) Find(id int64) (object *Image, vendenaError *Error) {
+func (sess ImageSession) Find(id string) (object *Image, vendenaError *Error) {
 	object = &Image{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
@@ -61,12 +62,12 @@ func (sess ImageSession) New() Image {
 
 // Save creates or updates an object.
 func (object *Image) Save() (vendenaError *Error) {
-	_, vendenaError = save(object, *object.Session, object.ID)
+	_, vendenaError = save(object, *object.Session, object.UUID)
 	return
 }
 
 // Delete deletes an object.
 func (object *Image) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

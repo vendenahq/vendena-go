@@ -5,6 +5,7 @@ import "time"
 // The Token model.
 type Token struct {
 	ID           int64                `json:"id"`
+	UUID         string               `json:"uuid"`
 	StoreID      int64                `json:"store_id"`
 	ClientID     string               `json:"client_id"`
 	ClientSecret string               `json:"client_secret"`
@@ -61,12 +62,12 @@ func (sess TokenSession) New() Token {
 
 // Save creates or updates an object.
 func (object *Token) Save() (vendenaError *Error) {
-	_, vendenaError = save(object, *object.Session, object.ID)
+	_, vendenaError = save(object, *object.Session, object.UUID)
 	return
 }
 
 // Delete deletes an object.
 func (object *Token) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

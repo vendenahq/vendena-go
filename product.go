@@ -9,6 +9,7 @@ import (
 // The Product model.
 type Product struct {
 	ID                   int64      `json:"id"`
+	UUID                 string     `json:"uuid"`
 	LocationID           int64      `json:"location_id"`
 	Title                string     `json:"title,omitempty"`
 	Body                 string     `json:"body"`
@@ -70,7 +71,7 @@ func (sess ProductSession) Taxons(values ...int64) ProductSession {
 }
 
 // Find returns a single instance by ID.
-func (sess ProductSession) Find(id int64) (object *Product, vendenaError *Error) {
+func (sess ProductSession) Find(id string) (object *Product, vendenaError *Error) {
 	object = &Product{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
@@ -103,7 +104,7 @@ func (sess ProductSession) New() Product {
 
 // Save creates or updates an object.
 func (object *Product) Save() (vendenaError *Error) {
-	_, vendenaError = save(object, *object.Session, object.ID)
+	_, vendenaError = save(object, *object.Session, object.UUID)
 	return
 }
 
@@ -119,6 +120,6 @@ func (object *Product) AddVariant(variant Variant) {
 
 // Delete deletes an object.
 func (object *Product) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

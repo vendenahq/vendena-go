@@ -29,8 +29,8 @@ type API struct {
 	BasicAuthPassword string
 	ClientID          string
 	ClientSecret      string
-	StoreID           int64
-	ChannelID         int64
+	StoreID           string
+	ChannelID         string
 	LogURI            bool
 	client            *http.Client
 }
@@ -145,11 +145,11 @@ func request(session interface{}, method string, id string, suffix string, body 
 	}
 
 	// Determine the Store and Channel headers
-	if api.StoreID > 0 {
-		req.Header.Add("X-Store-ID", strconv.FormatInt(api.StoreID, 10))
+	if len(api.StoreID) > 0 {
+		req.Header.Add("X-Store-ID", api.StoreID)
 	}
-	if api.ChannelID > 0 {
-		req.Header.Add("X-Channel-ID", strconv.FormatInt(api.ChannelID, 10))
+	if len(api.ChannelID) > 0 {
+		req.Header.Add("X-Channel-ID", api.ChannelID)
 	}
 
 	// Set JSON header
@@ -193,8 +193,16 @@ func findOneByToken(object interface{}, session Session, token string) (status i
 	return
 }
 
-func findOne(object interface{}, session Session, id int64) (status int, vendenaError *Error) {
-	return findOneByToken(object, session, strconv.FormatInt(id, 10))
+func findOne(object interface{}, session Session, id interface{}) (status int, vendenaError *Error) {
+	var strID = ""
+	switch v := id.(type) {
+	case int64:
+		strID = strconv.FormatInt(v, 10)
+	case string:
+		strID = v
+	}
+
+	return findOneByToken(object, session, strID)
 }
 
 func findAll(objects interface{}, session Session) (status int, vendenaError *Error) {
@@ -274,12 +282,27 @@ func saveByToken(object interface{}, session interface{}, token string) (status 
 	return
 }
 
-func save(object interface{}, session interface{}, id int64) (status int, vendenaError *Error) {
-	return saveByToken(object, session, strconv.FormatInt(id, 10))
+func save(object interface{}, session interface{}, id interface{}) (status int, vendenaError *Error) {
+	var strID = ""
+	switch v := id.(type) {
+	case int64:
+		strID = strconv.FormatInt(v, 10)
+	case string:
+		strID = v
+	}
+	return saveByToken(object, session, strID)
 }
 
-func delete(session interface{}, id int64) (status int, vendenaError *Error) {
-	result, status, vendenaError := request(session, http.MethodDelete, strconv.FormatInt(id, 10), "", nil)
+func delete(session interface{}, id interface{}) (status int, vendenaError *Error) {
+	var strID = ""
+	switch v := id.(type) {
+	case int64:
+		strID = strconv.FormatInt(v, 10)
+	case string:
+		strID = v
+	}
+
+	result, status, vendenaError := request(session, http.MethodDelete, strID, "", nil)
 	if vendenaError != nil {
 		return
 	}

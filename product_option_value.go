@@ -5,6 +5,7 @@ import "time"
 // The ProductOptionValue model.
 type ProductOptionValue struct {
 	ID        int64     `json:"id"`
+	UUID      string    `json:"uuid"`
 	Title     string    `json:"title"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

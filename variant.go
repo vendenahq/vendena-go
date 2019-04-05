@@ -5,6 +5,7 @@ import "time"
 // The Variant model.
 type Variant struct {
 	ID                    int64      `json:"id"`
+	UUID                  string     `json:"uuid"`
 	ProductID             int64      `json:"product_id"`
 	PriceModifierID       int64      `json:"price_modifier_id"`
 	ProductOptionValueIDs []int64    `json:"option_value_ids"`

@@ -10,6 +10,7 @@ import (
 // The Order model.
 type Order struct {
 	ID                  int64                   `json:"id"`
+	UUID                string                  `json:"uuid"`
 	ChannelID           int64                   `json:"channel_id"`
 	CartID              int64                   `json:"cart_id"`
 	CustomerID          int64                   `json:"customer_id"`

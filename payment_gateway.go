@@ -5,6 +5,7 @@ import "time"
 // The PaymentGateway model.
 type PaymentGateway struct {
 	ID        int64     `json:"id"`
+	UUID      string    `json:"uuid"`
 	Code      string    `json:"code"`
 	Title     string    `json:"title"`
 	CreatedAt time.Time `json:"created_at"`
@@ -27,7 +28,7 @@ func (api *API) PaymentGateways() PaymentGatewaySession {
 }
 
 // Find returns a single instance by ID.
-func (sess PaymentGatewaySession) Find(id int64) (object *PaymentGateway, vendenaError *Error) {
+func (sess PaymentGatewaySession) Find(id string) (object *PaymentGateway, vendenaError *Error) {
 	object = &PaymentGateway{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session

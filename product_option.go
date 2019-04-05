@@ -8,6 +8,7 @@ import (
 // The ProductOption model.
 type ProductOption struct {
 	ID        int64                `json:"id"`
+	UUID      string               `json:"uuid"`
 	Code      string               `json:"code"`
 	Title     string               `json:"title"`
 	CreatedAt time.Time            `json:"created_at"`
@@ -43,7 +44,7 @@ func (sess ProductOptionSession) Limit(limit int) ProductOptionSession {
 }
 
 // Find returns a single instance by ID.
-func (sess ProductOptionSession) Find(id int64) (object *ProductOption, vendenaError *Error) {
+func (sess ProductOptionSession) Find(id string) (object *ProductOption, vendenaError *Error) {
 	object = &ProductOption{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
@@ -75,7 +76,7 @@ func (sess ProductOptionSession) New() ProductOption {
 
 // Save creates or updates an object.
 func (object *ProductOption) Save() (vendenaError *Error) {
-	_, vendenaError = save(object, *object.Session, object.ID)
+	_, vendenaError = save(object, *object.Session, object.UUID)
 	return
 }
 
@@ -87,6 +88,6 @@ func (object *ProductOption) AddValue(v ProductOptionValue) {
 
 // Delete deletes an object.
 func (object *ProductOption) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

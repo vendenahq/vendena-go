@@ -8,6 +8,7 @@ import (
 // The DeliveryMethod model.
 type DeliveryMethod struct {
 	ID                   int64               `json:"id"`
+	UUID                 string              `json:"uuid"`
 	DeliveryMethodTypeID int64               `json:"delivery_method_type_id"`
 	Title                string              `json:"title"`
 	Details              string              `json:"details"`
@@ -50,7 +51,7 @@ func (sess DeliveryMethodSession) Limit(limit int) DeliveryMethodSession {
 }
 
 // Find returns a single instance by ID.
-func (sess DeliveryMethodSession) Find(id int64) (object *DeliveryMethod, vendenaError *Error) {
+func (sess DeliveryMethodSession) Find(id string) (object *DeliveryMethod, vendenaError *Error) {
 	object = &DeliveryMethod{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
@@ -83,12 +84,12 @@ func (sess DeliveryMethodSession) New() DeliveryMethod {
 
 // Save creates or updates an object.
 func (object *DeliveryMethod) Save() (vendenaError *Error) {
-	_, vendenaError = save(&object, *object.Session, object.ID)
+	_, vendenaError = save(&object, *object.Session, object.UUID)
 	return
 }
 
 // Delete deletes an object.
 func (object *DeliveryMethod) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

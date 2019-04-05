@@ -5,6 +5,7 @@ import "time"
 // The Transaction model.
 type Transaction struct {
 	ID                int64     `json:"id"`
+	UUID              string    `json:"uuid"`
 	OrderID           int64     `json:"order_id"`
 	Amount            float64   `json:"amount"`
 	ResponseCode      string    `json:"response_code"`

@@ -8,6 +8,7 @@ import (
 // The Channel model.
 type Channel struct {
 	ID                int64     `json:"id"`
+	UUID              string    `json:"uuid"`
 	Title             string    `json:"title"`
 	Enabled           bool      `json:"enabled"`
 	CreatedAt         time.Time `json:"created_at"`
@@ -47,7 +48,7 @@ func (sess ChannelSession) Limit(limit int) ChannelSession {
 }
 
 // Find returns a single instance by ID.
-func (sess ChannelSession) Find(id int64) (object *Channel, vendenaError *Error) {
+func (sess ChannelSession) Find(id string) (object *Channel, vendenaError *Error) {
 	object = &Channel{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
@@ -80,12 +81,12 @@ func (sess ChannelSession) New() Channel {
 
 // Save creates or updates an object.
 func (object *Channel) Save() (vendenaError *Error) {
-	_, vendenaError = save(&object, *object.Session, object.ID)
+	_, vendenaError = save(&object, *object.Session, object.UUID)
 	return
 }
 
 // Delete deletes an object.
 func (object *Channel) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

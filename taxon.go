@@ -8,6 +8,7 @@ import (
 // The Taxon model.
 type Taxon struct {
 	ID        int64     `json:"id"`
+	UUID      string    `json:"uuid"`
 	ParentID  int64     `json:"parent_id"`
 	Code      string    `json:"code"`
 	Title     string    `json:"title"`
@@ -44,7 +45,7 @@ func (sess TaxonSession) SiblingID(id int64) TaxonSession {
 }
 
 // Find returns a single instance by ID.
-func (sess TaxonSession) Find(id int64) (object *Taxon, vendenaError *Error) {
+func (sess TaxonSession) Find(id string) (object *Taxon, vendenaError *Error) {
 	object = &Taxon{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
@@ -77,12 +78,12 @@ func (sess TaxonSession) New() Taxon {
 
 // Save creates or updates an object.
 func (object *Taxon) Save() (vendenaError *Error) {
-	_, vendenaError = save(object, *object.Session, object.ID)
+	_, vendenaError = save(object, *object.Session, object.UUID)
 	return
 }
 
 // Delete deletes an object.
 func (object *Taxon) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

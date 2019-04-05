@@ -5,6 +5,7 @@ import "time"
 // The Store model.
 type Store struct {
 	ID        int64     `json:"id"`
+	UUID      string    `json:"uuid"`
 	ProjectID int64     `json:"project_id"`
 	AddressID int64     `json:"-"`
 	Title     string    `json:"title"`
@@ -30,7 +31,7 @@ func (api *API) Stores() StoreSession {
 }
 
 // Find returns a single instance by ID.
-func (sess StoreSession) Find(id int64) (object *Store, vendenaError *Error) {
+func (sess StoreSession) Find(id string) (object *Store, vendenaError *Error) {
 	object = &Store{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
@@ -60,12 +61,12 @@ func (sess StoreSession) New() Store {
 
 // Save creates or updates an object.
 func (object *Store) Save() (vendenaError *Error) {
-	_, vendenaError = save(object, *object.Session, object.ID)
+	_, vendenaError = save(object, *object.Session, object.UUID)
 	return
 }
 
 // Delete deletes an object.
 func (object *Store) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

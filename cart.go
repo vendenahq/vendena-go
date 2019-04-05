@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -99,8 +98,8 @@ func (object *Cart) SaveLineItem(lineItem *LineItem) (vendenaError *Error) {
 }
 
 // RemoveLineItem removes a line item from the cart.
-func (object *Cart) RemoveLineItem(id int64) (vendenaError *Error) {
-	result, status, vendenaError := request(*object.Session, http.MethodDelete, object.Token, "items/"+strconv.FormatInt(id, 10), nil)
+func (object *Cart) RemoveLineItem(id string) (vendenaError *Error) {
+	result, status, vendenaError := request(*object.Session, http.MethodDelete, object.Token, "items/"+id, nil)
 	if vendenaError != nil {
 		return
 	}

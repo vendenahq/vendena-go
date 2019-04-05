@@ -5,6 +5,7 @@ import "time"
 // The LineItem model.
 type LineItem struct {
 	ID                    int64     `json:"id"`
+	UUID                  string    `json:"uuid"`
 	ProductID             int64     `json:"product_id"`
 	VariantID             int64     `json:"variant_id"`
 	ProductOptionValueIDs []int64   `json:"option_value_ids"`

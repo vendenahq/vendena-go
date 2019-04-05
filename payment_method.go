@@ -5,6 +5,7 @@ import "time"
 // The PaymentMethod model.
 type PaymentMethod struct {
 	ID                  int64              `json:"id"`
+	UUID                string             `json:"uuid"`
 	PaymentMethodTypeID int64              `json:"payment_method_type_id"`
 	PaymentGatewayID    int64              `json:"payment_gateway_id"`
 	Credentials1        string             `json:"credentials_1"`
@@ -38,7 +39,7 @@ func (api *API) PaymentMethods() PaymentMethodSession {
 }
 
 // Find returns a single instance by ID.
-func (sess PaymentMethodSession) Find(id int64) (object *PaymentMethod, vendenaError *Error) {
+func (sess PaymentMethodSession) Find(id string) (object *PaymentMethod, vendenaError *Error) {
 	object = &PaymentMethod{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	return
@@ -67,12 +68,12 @@ func (sess PaymentMethodSession) New() PaymentMethod {
 
 // Save creates or updates an object.
 func (object *PaymentMethod) Save() (vendenaError *Error) {
-	_, vendenaError = save(object, *object.Session, object.ID)
+	_, vendenaError = save(object, *object.Session, object.UUID)
 	return
 }
 
 // Delete deletes an object.
 func (object *PaymentMethod) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

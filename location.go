@@ -8,6 +8,7 @@ import (
 // The Location model.
 type Location struct {
 	ID        int64     `json:"id"`
+	UUID      string    `json:"uuid"`
 	Title     string    `json:"title"`
 	Details   string    `json:"details"`
 	Enabled   bool      `json:"enabled"`
@@ -44,7 +45,7 @@ func (sess LocationSession) Limit(limit int) LocationSession {
 }
 
 // Find returns a single instance by ID.
-func (sess LocationSession) Find(id int64) (object *Location, vendenaError *Error) {
+func (sess LocationSession) Find(id string) (object *Location, vendenaError *Error) {
 	object = &Location{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	object.Session = &sess.Session
@@ -77,12 +78,12 @@ func (sess LocationSession) New() Location {
 
 // Save creates or updates an object.
 func (object *Location) Save() (vendenaError *Error) {
-	_, vendenaError = save(&object, *object.Session, object.ID)
+	_, vendenaError = save(&object, *object.Session, object.UUID)
 	return
 }
 
 // Delete deletes an object.
 func (object *Location) Delete() (vendenaError *Error) {
-	_, vendenaError = delete(*object.Session, object.ID)
+	_, vendenaError = delete(*object.Session, object.UUID)
 	return
 }

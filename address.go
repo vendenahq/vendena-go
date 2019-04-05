@@ -5,6 +5,7 @@ import "time"
 // The Address model.
 type Address struct {
 	ID        int64     `json:"id"`
+	UUID      string    `json:"uuid"`
 	FirstName string    `json:"first_name"`
 	LastName  string    `json:"last_name"`
 	Email     string    `json:"email"`
@@ -37,7 +38,7 @@ func (api *API) Addresses() AddressSession {
 }
 
 // Find returns a single instance by ID.
-func (sess AddressSession) Find(id int64) (object *Address, vendenaError *Error) {
+func (sess AddressSession) Find(id string) (object *Address, vendenaError *Error) {
 	object = &Address{}
 	_, vendenaError = findOne(object, sess.Session, id)
 	return
@@ -63,6 +64,6 @@ func (sess AddressSession) New() Address {
 
 // Save creates or updates an object.
 func (object *Address) Save() (vendenaError *Error) {
-	_, vendenaError = save(object, *object.Session, object.ID)
+	_, vendenaError = save(object, *object.Session, object.UUID)
 	return
 }
