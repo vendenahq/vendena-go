@@ -8,6 +8,8 @@ type Store struct {
 	ProjectID int64     `json:"project_id"`
 	AddressID int64     `json:"-"`
 	Title     string    `json:"title"`
+	Currency  string    `json:"currency"`
+	Locale    string    `json:"locale"`
 	VATNumber string    `json:"vat_number"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`

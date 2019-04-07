@@ -29,6 +29,8 @@ type Order struct {
 	SubTotal            float64                 `json:"sub_total"`
 	TotalPrice          float64                 `json:"total_price"`
 	Weight              float64                 `json:"weight"`
+	Currency            string                  `json:"currency"`
+	Locale              string                  `json:"locale"`
 	CreatedAt           time.Time               `json:"created_at"`
 	UpdatedAt           time.Time               `json:"updated_at"`
 	Customer            *Customer               `json:"customer"`

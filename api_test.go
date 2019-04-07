@@ -130,8 +130,6 @@ func TestGetStore(t *testing.T) {
 //
 // 		var channel = api.Channels().New()
 // 		channel.Title = "Created by SDK"
-// 		channel.DefaultCurrencyID = 2
-// 		channel.DefaultLocaleID = 2
 // 		var err = channel.Save()
 // 		assert.Nil(t, err, "should be nil")
 // 		assert.NotEqual(t, channel.ID, int64(0), "ID should not be 0")

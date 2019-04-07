@@ -7,17 +7,15 @@ import (
 
 // The Channel model.
 type Channel struct {
-	ID                int64     `json:"id"`
-	Title             string    `json:"title"`
-	Enabled           bool      `json:"enabled"`
-	CreatedAt         time.Time `json:"created_at"`
-	UpdatedAt         time.Time `json:"updated_at"`
-	DefaultCurrencyID int       `json:"default_currency_id"`
-	DefaultCurrency   *Currency `json:"default_currency"`
-	DefaultLocaleID   int       `json:"default_locale_id"`
-	DefaultLocale     *Locale   `json:"default_locale"`
-	Domains           []Domain  `json:"domains"`
-	Session           *Session  `json:"-"`
+	ID        int64     `json:"id"`
+	Title     string    `json:"title"`
+	Enabled   bool      `json:"enabled"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Currency  string    `json:"currency"`
+	Locale    string    `json:"locale"`
+	Domains   []Domain  `json:"domains"`
+	Session   *Session  `json:"-"`
 }
 
 // ChannelSession represents the constructor.
