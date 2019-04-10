@@ -18,6 +18,7 @@ type Variant struct {
 	StockLevelLowWarning  int        `json:"stock_level_low_warning"`
 	SaleStartAt           *time.Time `json:"sale_start_at,omitempty"`
 	SaleEndAt             *time.Time `json:"sale_end_at,omitempty"`
+	CustomData            string     `json:"custom_data"`
 	Enabled               bool       `json:"enabled"`
 	CreatedAt             time.Time  `json:"created_at"`
 	UpdatedAt             time.Time  `json:"updated_at"`
