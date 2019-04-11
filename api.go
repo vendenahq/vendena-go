@@ -53,9 +53,10 @@ func (api *API) SetAPIKeys(clientID string, clientSecret string) {
 
 // Session represents the data for the model objects.
 type Session struct {
-	API     *API
-	URI     string
-	Options map[string]string
+	API       *API
+	URI       string
+	URIPrefix string
+	Options   map[string]string
 }
 
 // Count is the JSON count response.
@@ -109,6 +110,10 @@ func request(session interface{}, method string, id string, suffix string, body 
 
 	if len(id) > 0 {
 		endpoint = fmt.Sprintf("%s/%s", endpoint, id)
+	}
+
+	if len(s.URIPrefix) > 0 {
+		endpoint = s.URIPrefix + "/" + endpoint
 	}
 
 	if len(suffix) > 0 {

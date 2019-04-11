@@ -1,9 +1,6 @@
 package vendena
 
 import (
-	"bytes"
-	"encoding/json"
-	"net/http"
 	"strconv"
 	"time"
 )
@@ -44,23 +41,7 @@ func (sess BidSession) New() Bid {
 
 // Save creates or updates an object.
 func (object *Bid) Save() (vendenaError *Error) {
-	var body = &bytes.Buffer{}
-	if err := json.NewEncoder(body).Encode(object); err != nil {
-		vendenaError = createError("json_encoder_error", err)
-		return
-	}
-
-	result, status, vendenaError := request(*object.Session, http.MethodPost, strconv.FormatInt(object.AuctionID, 10), "auctions", body)
-
-	if status != http.StatusCreated {
-		vendenaError = parseVendenaError(result, status)
-		return
-	}
-
-	if err := json.NewDecoder(result).Decode(object); err != nil {
-		vendenaError = createError("json_decoder_error", err)
-		return
-	}
-
+	object.Session.URIPrefix = "auctions/" + strconv.FormatInt(object.AuctionID, 10)
+	_, vendenaError = save(object, *object.Session, object.ID)
 	return
 }

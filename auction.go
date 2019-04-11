@@ -23,6 +23,7 @@ type Auction struct {
 	CreatedAt          time.Time `json:"created_at"`
 	UpdatedAt          time.Time `json:"updated_at"`
 	Product            *Product  `json:"product"`
+	HighestBid         *Bid      `json:"highest_bid"`
 	Session            *Session  `json:"-"`
 }
 
@@ -90,8 +91,28 @@ func (object *Auction) Save() (vendenaError *Error) {
 	return
 }
 
-// Bids gets the delivery methods available to the order.
-func (object *Auction) DeliveryMethods() (bids []Bid, vendenaError *Error) {
+// GetHighestBid gets the auction's highest bid.
+func (sess AuctionSession) GetHighestBid(id int64) (bid Bid, vendenaError *Error) {
+	result, status, vendenaError := request(sess.Session, http.MethodGet, strconv.FormatInt(id, 10), "highest_bid", nil)
+	if vendenaError != nil {
+		return
+	}
+
+	if status != http.StatusOK {
+		vendenaError = parseVendenaError(result, status)
+		return
+	}
+
+	if err := json.NewDecoder(result).Decode(&bid); err != nil {
+		vendenaError = createError("json_decoder_error", err)
+		return
+	}
+
+	return
+}
+
+// Bids gets the auction's bids.
+func (object *Auction) Bids() (bids []Bid, vendenaError *Error) {
 	result, status, vendenaError := request(*object.Session, http.MethodGet, strconv.FormatInt(object.ID, 10), "bids", nil)
 	if vendenaError != nil {
 		return
