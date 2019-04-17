@@ -24,31 +24,20 @@ const colorDefault = "\x1b[0m"
 
 // API represents the client configuration.
 type API struct {
-	URI               string
-	BasicAuthUsername string
-	BasicAuthPassword string
-	ClientID          string
-	ClientSecret      string
-	StoreID           int64
-	ChannelID         int64
-	LogURI            bool
-	client            *http.Client
-}
-
-// SetBasicAuthentication sets the Basic Authentication credentials and removes the API keys.
-func (api *API) SetBasicAuthentication(username string, password string) {
-	api.BasicAuthUsername = username
-	api.BasicAuthPassword = password
-	api.ClientID = ""
-	api.ClientSecret = ""
+	URI          string
+	ClientID     string
+	ClientSecret string
+	ProjectID    int64
+	StoreID      int64
+	ChannelID    int64
+	LogURI       bool
+	client       *http.Client
 }
 
 // SetAPIKeys sets the API keys and removes the Basic Authentication credentials.
 func (api *API) SetAPIKeys(clientID string, clientSecret string) {
 	api.ClientID = clientID
 	api.ClientSecret = clientSecret
-	api.BasicAuthUsername = ""
-	api.BasicAuthPassword = ""
 }
 
 // Session represents the data for the model objects.
@@ -139,22 +128,18 @@ func request(session interface{}, method string, id string, suffix string, body 
 		return
 	}
 
-	// Set BasicAuth credentials (if defined)
-	if len(api.BasicAuthUsername) > 0 && len(api.BasicAuthPassword) > 0 {
-		req.SetBasicAuth(api.BasicAuthUsername, api.BasicAuthPassword)
-	}
+	// Set API keys
+	req.SetBasicAuth(api.ClientID, api.ClientSecret)
 
-	// Set API keys (if defined)
-	if len(api.ClientID) > 0 && len(api.ClientSecret) > 0 {
-		req.SetBasicAuth(api.ClientID, api.ClientSecret)
+	// Determine the Project, Store and Channel headers
+	if api.ProjectID > 0 {
+		req.Header.Add("Vendena-Project-ID", strconv.FormatInt(api.ProjectID, 10))
 	}
-
-	// Determine the Store and Channel headers
 	if api.StoreID > 0 {
-		req.Header.Add("X-Store-ID", strconv.FormatInt(api.StoreID, 10))
+		req.Header.Add("Vendena-Store-ID", strconv.FormatInt(api.StoreID, 10))
 	}
 	if api.ChannelID > 0 {
-		req.Header.Add("X-Channel-ID", strconv.FormatInt(api.ChannelID, 10))
+		req.Header.Add("Vendena-Channel-ID", strconv.FormatInt(api.ChannelID, 10))
 	}
 
 	// Set JSON header
